@@ -1,0 +1,131 @@
+{% extends "rendezvous/base.html" %}
+
+{% block title %}Tableau de bord Coach{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Tableau de bord Coach</h2>
+
+    <!-- Onglets -->
+    <ul class="nav nav-tabs" id="coachDashboardTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="seances-tab" data-bs-toggle="tab" data-bs-target="#seances" type="button" role="tab">
+                Rendez-vous
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">
+                Paramètres
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="coachDashboardContent">
+        <!-- Onglet Séances -->
+        <div class="tab-pane fade show active" id="seances" role="tabpanel">
+            {% if seances %}
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Client</th>
+                        <th>Date</th>
+                        <th>Heure</th>
+                        <th>Objet</th>
+                        <th>Notes Coach</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for seance in seances %}
+                    <tr>
+                        <td>{{ seance.client.username }}</td>
+                        <td>{{ seance.date|date:"d M Y" }}</td>
+                        <td>{{ seance.heure_debut|time:"H:i" }}</td>
+                        <td>{{ seance.objet }}</td>
+                        <td>{{ seance.notes_coach|default:"-" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-info" role="alert">
+                Aucun rendez-vous pour le moment.
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Onglet Paramètres -->
+        <div class="tab-pane fade" id="settings" role="tabpanel">
+            <h5 class="mb-3">Informations personnelles</h5>
+            <form method="post" action="{% url 'coach_update_settings' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Nom d'utilisateur</label>
+                    <input type="text" class="form-control" value="{{ user.username }}" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" name="email" id="email" class="form-control" value="{{ user.email }}">
+                </div>
+                <div class="mb-3">
+                    <label for="bio" class="form-label">Bio / Spécialité</label>
+                    <textarea name="bio" id="bio" class="form-control" rows="3">{{ coach_profile.bio }}</textarea>
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="notifications" name="notifications" {% if coach_profile.notifications %}checked{% endif %}>
+                    <label class="form-check-label" for="notifications">Activer les notifications</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </form>
+
+            <hr class="my-4">
+
+            <h5>Changer de mot de passe</h5>
+            <a href="{% url 'password_change' %}" class="btn btn-outline-secondary">Modifier le mot de passe</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+{% comment %} {% extends "rendezvous/base.html" %}
+
+{% block title %}Tableau de bord Coach{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Tableau de bord Coach</h2>
+
+    {% if seances %}
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Client</th>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Objet</th>
+                <th>Notes Coach</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for seance in seances %}
+            <tr>
+                <td>{{ seance.client.username }}</td>
+                <td>{{ seance.date|date:"d M Y" }}</td>
+                <td>{{ seance.heure_debut|time:"H:i" }}</td>
+                <td>{{ seance.objet }}</td>
+                <td>{{ seance.notes_coach|default:"-" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        Aucun rendez-vous pour le moment.
+    </div>
+    {% endif %}
+</div>
+{% endblock %} {% endcomment %}
+

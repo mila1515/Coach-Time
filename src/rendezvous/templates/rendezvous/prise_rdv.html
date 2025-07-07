@@ -1,0 +1,49 @@
+{% extends 'rendezvous/base.html' %}
+{% block content %}
+<h2>Prendre rendez-vous</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Valider</button>
+</form>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const coachField = document.getElementById("id_coach");
+    const dateField = document.getElementById("id_date");
+    const heureField = document.getElementById("id_heure_debut");
+
+    function chargerHeuresDisponibles() {
+        const coachId = coachField.value;
+        const date = dateField.value;
+
+        if (coachId && date) {
+            fetch(`/ajax/heures-disponibles/?coach_id=${coachId}&date=${date}`)
+                .then(response => response.json())
+                .then(data => {
+                    heureField.innerHTML = "";
+
+                    if (data.heures && data.heures.length > 0) {
+                        data.heures.forEach(h => {
+                            const option = document.createElement("option");
+                            option.value = h;
+                            option.textContent = h;
+                            heureField.appendChild(option);
+                        });
+                    } else {
+                        const option = document.createElement("option");
+                        option.textContent = "Aucune heure disponible";
+                        heureField.appendChild(option);
+                    }
+                });
+        }
+    }
+
+    coachField.addEventListener("change", chargerHeuresDisponibles);
+    dateField.addEventListener("change", chargerHeuresDisponibles);
+});
+</script>
+
+{% endblock %}

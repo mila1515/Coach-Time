@@ -1,0 +1,32 @@
+{% extends 'rendezvous/base.html' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+ <div class="col-md-5 col-sm-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title mb-4 text-center">Connexion</h2>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {{ form.as_p }}
+
+          <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+        </form>
+        <hr>
+        <p class="text-center mb-0">Pas encore inscrit ? <a href="{% url 'signup' %}">Créer un compte</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+

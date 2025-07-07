@@ -1,0 +1,14 @@
+{% extends 'rendezvous/base.html' %}
+
+{% block title %}Ajouter un témoignage{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2>Ajouter un témoignage</h2>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+    </form>
+</div>
+{% endblock %}

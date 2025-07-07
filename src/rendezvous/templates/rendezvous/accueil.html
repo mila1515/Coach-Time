@@ -1,0 +1,269 @@
+{% extends 'rendezvous/base.html' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero avec image de fond */
+    .hero {
+        background: url('https://source.unsplash.com/1600x600/?fitness,coach') center/cover no-repeat;
+        color: white;
+        padding: 100px 20px;
+        text-align: center;
+        border-radius: 8px;
+        animation: fadeIn 2s ease-in-out;
+    }
+
+    /* Couleur bleue personnalisée */
+    .hero h2,
+    .hero p {
+        color: #0d6efd; /* Bleu Bootstrap */
+    }
+
+    .hero h2 {
+        font-size: 3rem;
+        font-weight: bold;
+    }
+
+    .hero p {
+        font-size: 1.25rem;
+    }
+
+    .btn-custom-blue {
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+    }
+
+    .btn-custom-blue:hover {
+        background-color: #0b5ed7;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Section “Comment ça marche ?” */
+    .how-it-works h3 {
+        margin-bottom: 1rem;
+    }
+
+    /* Témoignages */
+    .testimonial {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .testimonial p {
+        font-style: italic;
+    }
+
+    .testimonial h5 {
+        margin-top: 1rem;
+        font-weight: bold;
+    }
+
+    .coach-reply {
+        font-style: normal;
+        color: #333;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero mb-5">
+    <h2>Bienvenue sur Mon Coach Perso</h2>
+    <p>Réservez votre séance facilement en ligne avec un coach qui vous motive.</p>
+    <a href="{% url 'signup' %}" class="btn btn-custom-blue mt-4">Commencer maintenant</a>
+</div>
+
+<div class="how-it-works mb-5">
+    <h3 class="text-center mb-4">Comment ça marche ?</h3>
+    <div class="row text-center">
+        <div class="col-md-4">
+            <h5>1. Créez un compte</h5>
+            <p>Inscrivez-vous en quelques secondes pour accéder aux séances.</p>
+        </div>
+        <div class="col-md-4">
+            <h5>2. Choisissez une séance</h5>
+            <p>Consultez les disponibilités de votre coach en temps réel.</p>
+        </div>
+        <div class="col-md-4">
+            <h5>3. Soyez accompagné</h5>
+            <p>Rejoignez votre séance avec énergie et motivation !</p>
+        </div>
+    </div>
+</div>
+
+<div class="mb-5">
+    <h3 class="text-center mb-4">Témoignages de nos clients</h3>
+    <div class="row g-4">
+        {% for temoignage in temoignages %}
+        <div class="col-md-4">
+            <div class="testimonial">
+                <p>"{{ temoignage.message }}"</p>
+                <h5>– {{ temoignage.nom }}</h5>
+
+                {% if temoignage.reponse_coach %}
+                <div class="coach-reply mt-3 p-3 border rounded bg-light">
+                    <strong>Réponse du coach :</strong>
+                    <p>{{ temoignage.reponse_coach }}</p>
+                </div>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                    <div class="mt-2">
+                        {% if user.is_coach %}
+                            <a href="{% url 'repondre_temoignage' temoignage.pk %}" class="btn btn-sm btn-primary">Répondre</a>
+                        {% endif %}
+                        <a href="{% url 'signaler_temoignage' temoignage.pk %}" class="btn btn-sm btn-warning">Signaler</a>
+                        {% if user.is_staff %}
+                            <a href="{% url 'supprimer_temoignage' temoignage.pk %}" class="btn btn-sm btn-danger">Supprimer</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">Aucun témoignage disponible pour le moment.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <a href="{% url 'ajouter_temoignage' %}" class="btn btn-outline-primary">Ajouter un témoignage</a>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+{% comment %} {% extends 'rendezvous/base.html' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero avec image de fond */
+    .hero {
+        background: url('https://source.unsplash.com/1600x600/?fitness,coach') center/cover no-repeat;
+        color: white;
+        padding: 100px 20px;
+        text-align: center;
+        border-radius: 8px;
+        animation: fadeIn 2s ease-in-out;
+    }
+
+    /* Couleur bleue personnalisée */
+    .hero h2,
+    .hero p {
+        color: #0d6efd; /* Bleu Bootstrap */
+    }
+
+    .hero h2 {
+        font-size: 3rem;
+        font-weight: bold;
+    }
+
+    .hero p {
+        font-size: 1.25rem;
+    }
+
+    .btn-custom-blue {
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+    }
+
+    .btn-custom-blue:hover {
+        background-color: #0b5ed7;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Section “Comment ça marche ?” */
+    .how-it-works h3 {
+        margin-bottom: 1rem;
+    }
+
+    /* Témoignages */
+    .testimonial {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .testimonial p {
+        font-style: italic;
+    }
+
+    .testimonial h5 {
+        margin-top: 1rem;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero mb-5">
+    <h2>Bienvenue sur Mon Coach Perso</h2>
+    <p>Réservez votre séance facilement en ligne avec un coach qui vous motive.</p>
+    <a href="{% url 'signup' %}" class="btn btn-custom-blue mt-4">Commencer maintenant</a>
+</div>
+
+<div class="how-it-works mb-5">
+    <h3 class="text-center mb-4">Comment ça marche ?</h3>
+    <div class="row text-center">
+        <div class="col-md-4">
+            <h5>1. Créez un compte</h5>
+            <p>Inscrivez-vous en quelques secondes pour accéder aux séances.</p>
+        </div>
+        <div class="col-md-4">
+            <h5>2. Choisissez une séance</h5>
+            <p>Consultez les disponibilités de votre coach en temps réel.</p>
+        </div>
+        <div class="col-md-4">
+            <h5>3. Soyez accompagné</h5>
+            <p>Rejoignez votre séance avec énergie et motivation !</p>
+        </div>
+    </div>
+</div>
+
+<div class="mb-5">
+    <h3 class="text-center mb-4">Témoignages de nos clients</h3>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="testimonial">
+                <p>"Super plateforme, simple et efficace. Mon coach est au top !" </p>
+                <h5>– Laura B.</h5>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="testimonial">
+                <p>"J’ai enfin trouvé un rythme qui me convient. Merci !"</p>
+                <h5>– Karim M.</h5>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="testimonial">
+                <p>"La réservation en ligne est un vrai gain de temps. Je recommande."</p>
+                <h5>– Céline R.</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <a href="{% url 'ajouter_temoignage' %}" class="btn btn-outline-primary">Ajouter un témoignage</a>
+</div>
+{% endblock %} {% endcomment %}
